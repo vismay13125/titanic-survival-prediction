@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Titanic Survival Predictor</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f2f2f2;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .container {
+            background: white;
+            width: 400px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        input, select {
+            width: 90%;
+            padding: 10px;
+            margin: 8px;
+        }
+
+        button {
+            width: 95%;
+            padding: 12px;
+            margin-top: 15px;
+            background-color: #222;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Titanic Survival Predictor</h1>
+
+    <form action="/predict" method="POST">
+
+        <label>Passenger Class</label>
+        <select name="Pclass">
+            <option value="1">1st Class</option>
+            <option value="2">2nd Class</option>
+            <option value="3" selected>3rd Class</option>
+        </select>
+
+        <label>Age</label>
+        <input type="number" name="Age" step="0.1" required>
+
+        <label>Siblings / Spouse</label>
+        <input type="number" name="SibSp" value="0" min="0" required>
+
+        <label>Parents / Children</label>
+        <input type="number" name="Parch" value="0" min="0" required>
+
+        <label>Fare</label>
+        <input type="number" name="Fare" step="0.01" required>
+
+        <label>Sex</label>
+        <select name="Sex">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+
+        <label>Embarked</label>
+        <select name="Embarked">
+            <option value="S">Southampton</option>
+            <option value="C">Cherbourg</option>
+            <option value="Q">Queenstown</option>
+        </select>
+
+        <button type="submit">Predict Survival</button>
+
+    </form>
+
+    {% if result %}
+        <div class="result">
+            {{ result }}
+        </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
