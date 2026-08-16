@@ -1,0 +1,556 @@
+# 🚢 Titanic Survival Prediction
+
+An end-to-end Machine Learning project that predicts whether a passenger survived the Titanic disaster using Python, Pandas, Scikit-learn, Logistic Regression, and Flask.
+
+> **This is my first complete Machine Learning pipeline project**, where I worked through the process from data exploration and preprocessing to model training, evaluation, saving the model, and deploying it with Flask.
+
+## 📌 Project Overview
+
+The main goal of this project is to build a Machine Learning model that predicts whether a Titanic passenger survived based on passenger-related information.
+
+This project helped me understand how an ML project works as a complete pipeline rather than just training a model.
+
+The project covers:
+
+* Exploratory Data Analysis (EDA)
+* Handling missing values
+* Categorical data encoding
+* Feature selection
+* Train-test splitting
+* Feature scaling
+* Logistic Regression
+* Model evaluation
+* Cross-validation
+* Creating a Machine Learning pipeline
+* Saving the trained model using Joblib
+* Flask API deployment
+* Web-based prediction interface
+* Basic model monitoring concepts
+
+---
+
+# 🔄 Complete ML Workflow
+
+The complete workflow followed in this project is:
+
+```text
+                 Titanic Dataset
+                       │
+                       ▼
+            Exploratory Data Analysis
+                       │
+                       ▼
+             Check Dataset Structure
+              df.head() / df.info()
+                       │
+                       ▼
+             Summary Statistics
+                 df.describe()
+                       │
+                       ▼
+              Missing Value Analysis
+                       │
+                       ▼
+              Data Preprocessing
+                       │
+             ┌─────────┴─────────┐
+             ▼                   ▼
+       Handle Missing        Remove Unnecessary
+          Values                 Features
+             │                   │
+             └─────────┬─────────┘
+                       ▼
+             Categorical Encoding
+              Sex / Embarked
+                       │
+                       ▼
+              Feature Selection
+                       │
+                       ▼
+               Train-Test Split
+                 80% / 20%
+                       │
+                       ▼
+              Feature Scaling
+              StandardScaler
+                       │
+                       ▼
+             Logistic Regression
+                       │
+                       ▼
+                Model Training
+                       │
+                       ▼
+              Model Predictions
+                       │
+                       ▼
+             Model Evaluation
+                       │
+        ┌──────────────┼──────────────┐
+        ▼              ▼              ▼
+    Accuracy       Precision       Recall
+                       │
+                       ▼
+                   F1-Score
+                       │
+                       ▼
+             5-Fold Cross-Validation
+                       │
+                       ▼
+              Create ML Pipeline
+          Scaler + Logistic Regression
+                       │
+                       ▼
+                Save Pipeline
+                  Joblib
+                       │
+                       ▼
+               Flask Deployment
+                       │
+                       ▼
+              Web Prediction Page
+                       │
+                       ▼
+                Survival Result
+```
+
+---
+
+# 🧠 What I Learned From This Project
+
+Since this is my first complete ML pipeline, the main purpose was not only to get a prediction but to understand the complete workflow of a Machine Learning project.
+
+Through this project, I learned how to:
+
+* Explore a real-world dataset
+* Understand the structure of data
+* Find and handle missing values
+* Encode categorical features
+* Separate features and target variables
+* Split data into training and testing sets
+* Scale numerical features
+* Train a classification model
+* Evaluate a model using multiple metrics
+* Perform cross-validation
+* Create a Scikit-learn pipeline
+* Save and load trained models
+* Build a Flask API
+* Connect a Machine Learning model to a web interface
+* Organize and publish a project using GitHub
+
+---
+
+# 🎯 Objective
+
+The objective is to predict whether a passenger survived the Titanic disaster.
+
+The target variable is:
+
+```text
+Survived
+```
+
+The model produces two possible classes:
+
+| Prediction | Meaning         |
+| ---------- | --------------- |
+| `1`        | Survived        |
+| `0`        | Did not survive |
+
+---
+
+# 📊 Exploratory Data Analysis
+
+Before training the model, the dataset was explored to understand its structure and quality.
+
+Some of the Pandas functions used were:
+
+```python
+df.head()
+df.info()
+df.describe()
+df.isnull().sum()
+```
+
+These helped identify:
+
+* Number of rows and columns
+* Data types
+* Statistical information
+* Missing values
+* General structure of the dataset
+
+Visualizations such as histograms were also used to understand the distribution of numerical features.
+
+---
+
+# 🧹 Data Preprocessing
+
+The dataset required preprocessing before it could be used by the Machine Learning model.
+
+### Missing Values
+
+Missing values were handled based on the feature.
+
+For example:
+
+* `Age` → missing values filled using the mean
+* `Embarked` → missing values filled using the mode
+* `Cabin` → removed because a very large portion of the column was missing
+
+### Categorical Features
+
+Categorical variables such as `Sex` and `Embarked` were converted into numerical features using one-hot encoding.
+
+```python
+pd.get_dummies(
+    ds,
+    columns=['Sex', 'Embarked'],
+    drop_first=True
+)
+```
+
+---
+
+# ✂️ Train-Test Split
+
+The dataset was divided into training and testing data.
+
+```python
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.2,
+    random_state=42
+)
+```
+
+This resulted in:
+
+```text
+80% → Training
+20% → Testing
+```
+
+The training data was used to train the model, while the testing data was kept for evaluating its performance on unseen data.
+
+---
+
+# 📏 Feature Scaling
+
+`StandardScaler` was used to scale the numerical features.
+
+```python
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+```
+
+The training data was fitted and transformed:
+
+```python
+X_train_scaled = scaler.fit_transform(X_train)
+```
+
+The testing data was only transformed:
+
+```python
+X_test_scaled = scaler.transform(X_test)
+```
+
+This prevents information from the test set from influencing the scaling process.
+
+---
+
+# 🤖 Machine Learning Model
+
+## Logistic Regression
+
+Logistic Regression was selected as the main classification algorithm.
+
+```python
+from sklearn.linear_model import LogisticRegression
+
+model = LogisticRegression()
+model.fit(X_train_scaled, y_train)
+```
+
+The model predicts whether a passenger belongs to class `0` or class `1`.
+
+---
+
+# 📈 Model Evaluation
+
+The model was evaluated using several classification metrics:
+
+* Accuracy
+* Precision
+* Recall
+* F1-score
+
+The classification report was generated using:
+
+```python
+from sklearn.metrics import classification_report
+
+print(classification_report(y_test, y_pred))
+```
+
+### Results
+
+The model achieved approximately:
+
+| Metric    |   Score |
+| --------- | ------: |
+| Accuracy  | **81%** |
+| Precision | **81%** |
+| Recall    | **81%** |
+| F1-Score  | **81%** |
+
+The detailed classification report showed that the model performed slightly better at identifying passengers who did not survive than passengers who survived.
+
+---
+
+# 🔍 Cross-Validation
+
+To check whether the model's performance was consistent, **5-fold cross-validation** was performed.
+
+```python
+from sklearn.model_selection import cross_val_score
+
+scores = cross_val_score(
+    model,
+    X_train_scaled,
+    y_train,
+    cv=5
+)
+
+print(scores)
+print(scores.mean())
+```
+
+The approximate scores were:
+
+```text
+0.8257
+0.8042
+0.7887
+0.7394
+0.7958
+```
+
+Average cross-validation score:
+
+**≈ 79.1%**
+
+Cross-validation provided a more reliable estimate of the model's performance across different subsets of the training data.
+
+---
+
+# 🔗 Machine Learning Pipeline
+
+One of the main things I learned in this project was how to create a Machine Learning pipeline.
+
+The pipeline combines preprocessing and the Machine Learning model into one workflow.
+
+Conceptually:
+
+```text
+Raw Features
+     ↓
+StandardScaler
+     ↓
+Logistic Regression
+     ↓
+Prediction
+```
+
+This makes the model easier to save, reuse, and deploy.
+
+The pipeline was saved using Joblib:
+
+```python
+joblib.dump(pipeline, "pipeline.joblib")
+```
+
+---
+
+# 💾 Model Saving
+
+The trained model and preprocessing components were saved using Joblib.
+
+The project contains:
+
+```text
+pipeline.joblib
+titanic_model.joblib
+titanic_scaler.joblib
+```
+
+These files allow the trained model to be reused without training it again every time.
+
+---
+
+# 🌐 Flask Deployment
+
+After training and saving the Machine Learning model, I connected it to a Flask application.
+
+The Flask application loads the saved pipeline:
+
+```python
+pipeline = joblib.load("pipeline.joblib")
+```
+
+The application then receives passenger information, sends it through the pipeline, and returns the predicted survival result.
+
+The Flask application runs locally at:
+
+```text
+http://127.0.0.1:5000
+```
+
+---
+
+# 🖥️ Web Interface
+
+A simple HTML/CSS interface was created using Flask templates.
+
+The user can enter:
+
+* Passenger Class
+* Age
+* Number of siblings/spouse
+* Number of parents/children
+* Fare
+* Sex
+* Port of Embarkation
+
+After clicking **Predict Survival**, the application sends the information to the Flask backend and displays the prediction.
+
+---
+
+# 📡 API
+
+The Flask application contains a prediction endpoint:
+
+```text
+POST /predict
+```
+
+The endpoint receives passenger information and passes it to the saved Machine Learning pipeline.
+
+The model returns:
+
+```text
+1 → Passenger would likely survive
+0 → Passenger would likely not survive
+```
+
+---
+
+# 📁 Project Structure
+
+```text
+titanic-survival-prediction/
+│
+├── app.py
+├── mlpipeline.py
+├── pipeline.joblib
+├── titanic_model.joblib
+├── titanic_scaler.joblib
+├── .gitignore
+├── README.md
+│
+└── templates/
+    └── index.html
+```
+
+### File Description
+
+| File                    | Purpose                                     |
+| ----------------------- | ------------------------------------------- |
+| `mlpipeline.py`         | Data preprocessing, training and evaluation |
+| `app.py`                | Flask application and prediction            |
+| `pipeline.joblib`       | Saved ML pipeline                           |
+| `titanic_model.joblib`  | Saved Logistic Regression model             |
+| `titanic_scaler.joblib` | Saved StandardScaler                        |
+| `templates/index.html`  | Web interface                               |
+| `.gitignore`            | Files excluded from Git                     |
+| `README.md`             | Project documentation                       |
+
+---
+
+# 🚀 How to Run
+
+## 1. Clone the repository
+
+```bash
+git clone https://github.com/vismay13125/titanic-survival-prediction.git
+```
+
+```bash
+cd titanic-survival-prediction
+```
+
+## 2. Install dependencies
+
+```bash
+pip install pandas numpy scikit-learn matplotlib flask joblib
+```
+
+## 3. Run the Flask application
+
+```bash
+python app.py
+```
+
+## 4. Open the application
+
+Go to:
+
+```text
+http://127.0.0.1:5000
+```
+
+---
+
+# 🔮 Future Improvements
+
+Some improvements I would like to add in the future:
+
+* Try additional Machine Learning algorithms
+* Perform hyperparameter tuning
+* Improve feature engineering
+* Add confusion matrix visualization
+* Add ROC-AUC evaluation
+* Improve the web interface
+* Deploy the Flask application online
+* Add automated testing
+* Add proper model monitoring
+* Explore data drift detection
+* Add CI/CD using GitHub Actions
+
+---
+
+# 👨‍💻 About This Project
+
+This project is my **first complete Machine Learning pipeline**.
+
+I built it as a learning project to understand how a Machine Learning model moves from a raw dataset to a trained model and finally into a usable application.
+
+Rather than focusing only on model accuracy, I wanted to understand the complete process:
+
+```text
+Data → Preprocessing → Training → Evaluation
+→ Cross-Validation → Pipeline → Model Saving
+→ Flask Deployment → Prediction
+```
+
+This project represents my first step toward building more complete and production-oriented Machine Learning projects.
+
+---
+
+# 👤 Author
+
+**Vismay Budhiraja**
+
